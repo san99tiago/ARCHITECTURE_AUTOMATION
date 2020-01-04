@@ -1,0 +1,12 @@
+Este proyecto en primer lugar, hay un archivo de registros (TXT) con la info de todo lo realizado anteriormente.
+En estos registros, se guarda todo lo elaborado y es la base de datos de toda la informacion a nivel historico.
+
+Luego, un codigo en python se encarga de crear toda la informacion de objetos, clases y vectores con los registros anteriores.
+Estos se procesan cada vez que se corre el codigo a traves del registro mencionado al principio.
+
+EN PROCESO...
+Finalmente, hay una interfaz encargada de realizar nuevas operaciones y permitirle al usuario el manejo de informacion de proyectos.
+
+OJO...
+FALTA...
+devolver toda la informacion y recrearla en archivos de excel organizados
