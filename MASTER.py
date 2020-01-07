@@ -1,8 +1,7 @@
 #CODIGO MASTER DEL SISTEMA DE AUTOMATIZACION DE PROYECTOS 
 import datetime
-from MANEJO_TXT import ArchivoTexto
+# from MANEJO_TXT import ArchivoTexto
 import glob
-
 
 #Esta clase es la encargada de todo el analisis de cada proyecto, con sus respectivas N etapas y 4 subetapas estandarizadas
 class Proyecto:
@@ -184,9 +183,11 @@ class INTERPRETAR_TXT:
 ##ZONA DE PRUEBAS DE ESCRITORIO
 
 #Se crea clase para interpretar la info de txt (con ayuda de libreria glob.glob)
-recuperar_info = INTERPRETAR_TXT( glob.glob("REGISTROS.txt")[0] )
 # print(diccionario_posicion__en_vector_proyectos)
 # print(vector_proyectos)
+
+recuperar_info = INTERPRETAR_TXT( glob.glob("REGISTROS.txt")[0] )
+
 
 #mostramos proyectos, con sus etapas y subetapas e info de cada una de estas (mientras lo actualizamos en excel)
 for proy in vector_proyectos:
