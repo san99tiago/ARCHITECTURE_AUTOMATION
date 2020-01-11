@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+##La linea superior se encarga de poder hacer encoding con reconocimiento de tildes y enne
+
 #CODIGO MASTER DEL SISTEMA DE AUTOMATIZACION DE PROYECTOS 
 #Libreria para manejo de la fecha y el guardado de informacion segun la fecha
 import datetime
@@ -44,10 +47,10 @@ class Proyecto:
                 elif j == 1:
                     self.vector_etapas[i].agregar_subetapas( Subetapa( "ANTEPROYECTO {} {}".format( self.nombre_proyecto, self.vector_etapas[i].nombre_etapa ),self.fecha ) )
                 elif j == 2:
-                    self.vector_etapas[i].agregar_subetapas( Subetapa( "PROYECTO ARQUITECTONICO {} {}".format( self.nombre_proyecto, self.vector_etapas[i].nombre_etapa ), "NO DEFINIDA" ) )
+                    self.vector_etapas[i].agregar_subetapas( Subetapa( "PROYECTO ARQUITECTÓNICO {} {}".format( self.nombre_proyecto, self.vector_etapas[i].nombre_etapa ), "NO DEFINIDA" ) )
                     self.vector_etapas[i].vector_subetapas[j].estado_subetapa = "SIN COMENZAR"
                 else:
-                    self.vector_etapas[i].agregar_subetapas( Subetapa( "COORDINACION ARQUITECTONICA {} {}".format( self.nombre_proyecto, self.vector_etapas[i].nombre_etapa ), "NO DEFINIDA" ) )
+                    self.vector_etapas[i].agregar_subetapas( Subetapa( "COORDINACION ARQUITECTÓNICA {} {}".format( self.nombre_proyecto, self.vector_etapas[i].nombre_etapa ), "NO DEFINIDA" ) )
                     self.vector_etapas[i].vector_subetapas[j].estado_subetapa = "SIN COMENZAR"
 
     def mostrar_etapas_y_subetapas(self):
@@ -73,6 +76,10 @@ class Etapa:
     def __init__(self, nombre_etapa):
         self.nombre_etapa = nombre_etapa
         self.vector_subetapas = []      
+
+    #Metodo util para cambiar el nombre de una etapa segun quiera el usuario
+    def cambiar_nombre_etapa(self,nuevo_nombre_etapa):
+        self.nombre_etapa = nuevo_nombre_etapa
 
     def agregar_subetapas(self, Subetapa):
         self.vector_subetapas.append( Subetapa )
@@ -181,6 +188,13 @@ class INTERPRETAR_TXT:
                         etapa = int(info[4]) - 1
                         subetapa = int(info[5]) - 1
                         proy.vector_etapas[ etapa ].vector_subetapas[subetapa].agregar_ingreso( Ingreso( info[6], info[7], info[0] ) )
+            
+            #LINEAS DE REGISTRO (CAMBIAR NOMBRE ETAPA): "fecha","ACTIVO/INACTIVO","CAMBIAR NOMBRE ETAPA","NOMBRE PROYECTO","ETAPA","NUEVO NOMBRE ETAPA"
+            elif info[2] == "INGRESO" and info[1] == "ACTIVO":
+                for proy in self.vector_proyectos:
+                    if proy.nombre_proyecto == info[3]:
+                        etapa = int(info[4]) - 1
+                        proy.vector_etapas[etapa].cambiar_nombre_etapa( info[5] )
 
 
         txt.close() 
@@ -199,13 +213,13 @@ class INTERPRETAR_TXT:
         
         #Formatos utiles para mostrar informacion organizada
         bold = PROYECTOS_EXCEL.add_format({'bold': True})
-        bold_border = PROYECTOS_EXCEL.add_format({"bold":True,"border":True,"align":"center"})
+        bold_border_gris = PROYECTOS_EXCEL.add_format({"bold":True,"border":True,"align":"center","bg_color":"#C8C8C8"})
         normal_border = PROYECTOS_EXCEL.add_format({"border":True})
         currency = PROYECTOS_EXCEL.add_format({'num_format': '$#,##0.00'})
         currency_border = PROYECTOS_EXCEL.add_format({"num_format":'$#,##0.00',"border":True})
         txt_azul_bold_merge = PROYECTOS_EXCEL.add_format({'bold': True, 'font_color': 'blue'})
-        txt_rojo_bold = PROYECTOS_EXCEL.add_format({'bold': True, 'font_color':"#red"})
-        txt_verde_bold = PROYECTOS_EXCEL.add_format({"bold":True, "font_color":"00CC00"})
+        txt_rojo_bold = PROYECTOS_EXCEL.add_format({'bold': True, 'font_color':"red"})
+        txt_verde_bold = PROYECTOS_EXCEL.add_format({"bold":True, "font_color":"green"})
         fondo_gris_bold = PROYECTOS_EXCEL.add_format({"bold":True,"bg_color":"#C0C0C0","border":True})
         fondo_azul_bold_merge_1 = PROYECTOS_EXCEL.add_format({"bold":True,"bg_color":"#66B2FF","align":"center","border":True})
         fondo_azul_bold_merge_2 = PROYECTOS_EXCEL.add_format({"bold":True,"bg_color":"#CFE2F5","align":"left","border":True,"font_color":"black"})
@@ -225,7 +239,7 @@ class INTERPRETAR_TXT:
             vector_hojas_excel.append( PROYECTOS_EXCEL.add_worksheet("{}".format( self.vector_proyectos[proy].nombre_proyecto ) )  )
             
             #Cada hoja tendra las filas de un tamanno horizontal optimo 
-            vector_hojas_excel[proy].set_column('A:Z', 20)
+            vector_hojas_excel[proy].set_column('A:AZ', 20)
 
 
             #Dejamos el nombre del proyecto respectivo en la primera celda, junto con la info basica
@@ -234,14 +248,14 @@ class INTERPRETAR_TXT:
             vector_hojas_excel[proy].write( 1,0, "{}".format( "FECHA INICIO:" ), fondo_gris_bold )
             vector_hojas_excel[proy].write( 1,1, "{}".format( self.vector_proyectos[proy].fecha ), fondo_gris_bold)
             vector_hojas_excel[proy].write( 2,0, "{}".format( "CANTIDAD ETAPAS:" ), fondo_gris_bold )
-            vector_hojas_excel[proy].write( 2,1, "{}".format( self.vector_proyectos[proy].cantidad_etapas ), fondo_gris_bold )
+            vector_hojas_excel[proy].write( 2,1, int(self.vector_proyectos[proy].cantidad_etapas), fondo_gris_bold )
 
 
 
             #Accedemos a cada etapa...
             for etap in range( self.vector_proyectos[proy].cantidad_etapas ):
                 #Mostramos titulo de cada etapa del proyecto
-                vector_hojas_excel[proy].merge_range( fila,columna,fila,columna + 4, "{} {}".format( "ETAPA ", str(etap + 1) ), fondo_azul_bold_merge_1 )
+                vector_hojas_excel[proy].merge_range( fila,columna,fila,columna + 4, "{}".format( str(self.vector_proyectos[proy].vector_etapas[etap].nombre_etapa)  ), fondo_azul_bold_merge_1 )
                 fila = fila + 1
 
                 #Recorremos cada subetapa (siempre son las mismas 4)
@@ -255,7 +269,7 @@ class INTERPRETAR_TXT:
                     vector_hojas_excel[proy].write( fila,columna,"{}".format( "FECHA INICIO" ),bold )
                     vector_hojas_excel[proy].write( fila,columna + 1,"{}".format( self.vector_proyectos[proy].vector_etapas[etap].vector_subetapas[subetapa].fecha_inicio ),bold )
                     fila = fila +1
-                    vector_hojas_excel[proy].write( fila,columna,"{}".format( "FECHA FINALIZACION" ),bold )
+                    vector_hojas_excel[proy].write( fila,columna,"{}".format( "FECHA FINALIZACIÓN" ),bold )
                     vector_hojas_excel[proy].write( fila,columna + 1,"{}".format( self.vector_proyectos[proy].vector_etapas[etap].vector_subetapas[subetapa].fecha_fin ),bold )
                     fila = fila +3
                     
@@ -270,9 +284,9 @@ class INTERPRETAR_TXT:
                         fila = fila +1
                     else:
                         #Si SI hay gastos, se muestra el encabezado para la fecha, el nombre del gasto y el valor asociado
-                        vector_hojas_excel[proy].write( fila,columna,"{}".format("Fecha"),bold_border)
-                        vector_hojas_excel[proy].write( fila,columna + 1,"{}".format("Nombre Gasto"),bold_border)
-                        vector_hojas_excel[proy].write( fila,columna + 2,"{}".format("Cantidad"),bold_border)
+                        vector_hojas_excel[proy].write( fila,columna,"{}".format("Fecha"),bold_border_gris)
+                        vector_hojas_excel[proy].write( fila,columna + 1,"{}".format("Nombre Gasto"),bold_border_gris)
+                        vector_hojas_excel[proy].write( fila,columna + 2,"{}".format("Cantidad"),bold_border_gris)
                         fila = fila + 1
 
                         #Se recorren los gastos, con ayuda del vector que los almacena y se muestra su info importante
@@ -294,17 +308,23 @@ class INTERPRETAR_TXT:
                         fila = fila +1
                     else:
                         #Si SI hay ingresos, se muestra el encabezado para la fecha, el nombre del ingreso y el valor asociado
-                        vector_hojas_excel[proy].write( fila,columna,"{}".format("Fecha"),bold_border)
-                        vector_hojas_excel[proy].write( fila,columna + 1,"{}".format("Nombre Ingreso"),bold_border)
-                        vector_hojas_excel[proy].write( fila,columna + 2,"{}".format("Cantidad"),bold_border)
+                        vector_hojas_excel[proy].write( fila,columna,"{}".format("Fecha"),bold_border_gris)
+                        vector_hojas_excel[proy].write( fila,columna + 1,"{}".format("Nombre Ingreso"),bold_border_gris)
+                        vector_hojas_excel[proy].write( fila,columna + 2,"{}".format("Cantidad"),bold_border_gris)
                         fila = fila + 1
 
                         #Se recorren los ingresos, con ayuda del vector que los almacena y se muestra su info importante
+                        #Celda para luego dejar la formula del total lista
+                        # celda_inicio_suma = xlsxwriter.xl_rowcol_to_cell( fila, columna + 2 )
                         for ingreso in range( len(self.vector_proyectos[proy].vector_etapas[etap].vector_subetapas[subetapa].ingresos) ):
                             vector_hojas_excel[proy].write( fila, columna,"{}".format( self.vector_proyectos[proy].vector_etapas[etap].vector_subetapas[subetapa].ingresos[ingreso].fecha_ingreso ), normal_border )
                             vector_hojas_excel[proy].write( fila, columna + 1,"{}".format( self.vector_proyectos[proy].vector_etapas[etap].vector_subetapas[subetapa].ingresos[ingreso].nombre_ingreso ),normal_border )
                             vector_hojas_excel[proy].write( fila, columna + 2, float(self.vector_proyectos[proy].vector_etapas[etap].vector_subetapas[subetapa].ingresos[ingreso].cantidad_ingreso ),currency_border )
                             fila = fila + 1
+
+                        # celda_final_suma = xlsxwriter.xl_rowcol_to_cell( fila,columna + 2 )
+                        vector_hojas_excel[proy].write( fila,columna + 1,"{}".format("total"),bold )
+                        vector_hojas_excel[proy].write( fila,columna + 2, "=",bold)
 
 
                     #Dejamos un espacio de 3 entre cada subetapa (para ser mas organizados)
