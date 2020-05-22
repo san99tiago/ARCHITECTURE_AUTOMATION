@@ -12,9 +12,12 @@ For more information, you can contact me.
 *Tkinter < br/>
 The GUI interface is develped with this simple, but powerfull library.
 
-*TTK
+*TTK < br/>
+Allows us to add extra styling features to the GUI done in Tkinter.
 
-*Xlsxwritter
+*Xlsxwritter <br/>
+This is the main tool that allows us to manipulate and create the Excel sheets for the important information acquired and processed 
+with the main GUI app.
 
-## Autores
+## Authors
 Santiago García Arango
