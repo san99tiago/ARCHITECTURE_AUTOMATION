@@ -1,4 +1,4 @@
-# AUTOMATIZACIÓN DE PROYECTOS EN EMPRESA DE ARQUITECTURA :house:
+# AUTOMATION OF EXCEL SHEETS FOR ARCHITECTURE BUSINESS :house:
 
 This project is an old version of a simple automation implementation that generates a organized Excel file with the important information
 of a small architecture business. The first old project was based in a simple ".txt" file that saved the information, but now I'm working
@@ -10,7 +10,7 @@ For more information, you can contact me.
 
 ## Primary Dependencies
 *Tkinter < br/>
-The GUI interface is d
+The GUI interface is develped with this simple, but powerfull library.
 
 *TTK
 
