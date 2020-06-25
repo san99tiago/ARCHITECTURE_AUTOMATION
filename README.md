@@ -9,10 +9,10 @@ At this stage, it's still in development. < br/>
 For more information, you can contact me.
 
 ## Primary Dependencies
-*Tkinter < br/>
+*Tkinter <br/>
 The GUI interface is develped with this simple, but powerfull library.
 
-*TTK < br/>
+*TTK <br/>
 Allows us to add extra styling features to the GUI done in Tkinter.
 
 *Xlsxwritter <br/>
